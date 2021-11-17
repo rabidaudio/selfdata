@@ -1,0 +1,28 @@
+version: 1
+send_anonymous_usage_stats: true
+project_id: 7719d6c0-e1ea-45f2-85e4-a647da2211dd
+plugins:
+  extractors:
+  - name: tap-lastfm
+    namespace: tap_lastfm
+    pip_url: ../tap-lastfm
+    executable: tap-lastfm
+    capabilities:
+    - catalog
+    - discover
+    - state
+    settings:
+    - name: api_key
+      kind: password
+    - name: usernames
+      kind: array
+    - name: user_agent
+      kind: string
+    - name: start_date
+      kind: date_iso8601
+  loaders:
+  - name: target-postgres
+    variant: datamill-co
+    pip_url: singer-target-postgres
+    config:
+      postgres_database: selfdata
