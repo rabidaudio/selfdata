@@ -3,3 +3,6 @@
 /.meltano
 .env
 /.vscode
+
+.DS_Store
+

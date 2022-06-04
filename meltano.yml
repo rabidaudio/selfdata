@@ -1,11 +1,12 @@
 version: 1
+default_environment: local
 send_anonymous_usage_stats: true
 project_id: 7719d6c0-e1ea-45f2-85e4-a647da2211dd
 plugins:
   extractors:
   - name: tap-lastfm
     namespace: tap_lastfm
-    pip_url: ../tap-lastfm
+    pip_url: git+https://github.com/rabidaudio/tap-lastfm.git@v0.1.0
     executable: tap-lastfm
     capabilities:
     - catalog
@@ -20,9 +21,33 @@ plugins:
       kind: string
     - name: start_date
       kind: date_iso8601
-  loaders:
-  - name: target-postgres
-    variant: datamill-co
-    pip_url: singer-target-postgres
     config:
-      postgres_database: selfdata
+      api_key: $TAP_LASTFM_API_KEY
+      usernames:
+      - rabidaudio
+      - kath_ebooks
+      - valwigg
+      - UntiLiUnderstan
+      - trackstarlol
+      - schwegler
+      - emorphis
+    select:
+    - '*.*'
+    - '!*.*image*'
+schedules:
+- name: scrobbles
+  extractor: tap-lastfm
+  loader: target-postgres
+  transform: skip
+  interval: '@daily'
+  start_date: 2021-11-17 07:15:23.937016
+environments:
+- name: local
+  config:
+    plugins:
+      loaders:
+      - name: target-postgres
+        config:
+          postgres_database: selfdata
+        variant: datamill-co
+        pip_url: singer-target-postgres
