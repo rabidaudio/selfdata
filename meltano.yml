@@ -34,6 +34,32 @@ plugins:
     select:
     - '*.*'
     - '!*.*image*'
+  utilities:
+  - name: dagster
+    namespace: dagster
+    pip_url: -e orchestrate
+    executable: dagster
+    settings:
+    - name: home
+      env: DAGSTER_HOME
+    - name: schedule_timezone
+      env: DAGSTER_SCHEDULE_TIMEZONE
+    - name: database_url
+      env: DAGSTERDB_URL
+    commands:
+      scheduler:
+        args: run -w $DAGSTER_HOME/workspace.yaml
+        executable: dagster-daemon
+      ui:
+        args: -w $DAGSTER_HOME/workspace.yaml -h 0.0.0.0
+        executable: dagit
+      test:
+        args: ''
+        executable: pytest
+    config:
+      schedule_timezone: America/New_York
+      database_url: $DAGSTERDB_URL
+      home: $MELTANO_PROJECT_ROOT/orchestrate
 schedules:
 - name: scrobbles
   extractor: tap-lastfm
@@ -51,3 +77,6 @@ environments:
           postgres_database: selfdata
         variant: datamill-co
         pip_url: singer-target-postgres
+  env:
+    DAGSTERDB_URL: postgresql://localhost:5432/dagster
+    MELTANO_UI_WORKERS: '1'

@@ -3,6 +3,8 @@
 /.meltano
 .env
 /.vscode
+.logs
+*.egg-info
 
 .DS_Store
 
