@@ -1,0 +1,10 @@
+version: 2
+
+models:
+  - name: lastfm_users
+    description: An account on Last.FM. Unique by `username`.
+    columns:
+      - name: username
+        tests: [unique, not_null]
+  - name: scrobbles
+    description: A song listened to on Last.FM.

@@ -1,0 +1,20 @@
+version: 2
+
+sources:
+  - name: tap_lastfm
+    schema: tap_lastfm
+    freshness: 
+      warn_after: {count: 1, period: day}
+      error_after: {count: 2, period: day}
+    loaded_at_field: _sdc_batched_at
+    tables:
+      - name: scrobbles
+        columns:
+          - name: username
+            tests: [not_null]
+          - name: date
+            tests: [not_null]
+      - name: users
+        columns:
+          - name: username
+            tests: [not_null, unique]

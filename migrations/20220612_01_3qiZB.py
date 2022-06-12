@@ -7,5 +7,5 @@ from yoyo import step
 __depends__ = {}
 
 steps = [
-    step("CREATE SCHEMA tap_lastfm")
+    step("CREATE SCHEMA IF NOT EXISTS tap_lastfm")
 ]

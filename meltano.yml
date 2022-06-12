@@ -6,7 +6,7 @@ plugins:
   extractors:
   - name: tap-lastfm
     namespace: tap_lastfm
-    pip_url: git+https://github.com/rabidaudio/tap-lastfm.git@v0.1.0
+    pip_url: git+https://github.com/rabidaudio/tap-lastfm.git@v0.1.1
     executable: tap-lastfm
     capabilities:
     - catalog
@@ -43,9 +43,8 @@ plugins:
     variant: dbt-labs
     pip_url: dbt-core~=1.0.0 dbt-postgres~=1.0.0
     commands:
-      generate-source: 'run-operation generate_source --args ''{"schema_name": "$MELTANO_LOAD_SCHEMA"}''
-
-        '
+      generate-source: run-operation generate_source --args ''{"schema_name":"$MELTANO_LOAD_SCHEMA","generate_columns":true}''
+      test-freshness: source freshness
   utilities:
   - name: dagster
     namespace: dagster
@@ -83,8 +82,10 @@ plugins:
       env: YOYO_POSTGRES_SUBDIR
       value: migrations
     commands:
-      new: new
-      apply: apply
+      new-setup: new -m setup
+      apply-setup: apply -m 'setup$'
+      new-postrun: new -m postrun
+      apply-postrun: apply -m 'postrun$'
 environments:
 - name: local
   config:
@@ -118,7 +119,11 @@ environments:
 jobs:
 - name: deploy
   tasks:
-  - yoyo-postgres:apply dbt-postgres:run
+  - dbt-postgres:deps yoyo-postgres:apply-setup
+  - dbt-postgres:run
 - name: lastfm
   tasks:
-  - tap-lastfm target-postgres dbt-postgres:test dbt-postgres:run
+  - tap-lastfm target-postgres
+  - yoyo-postgres:apply-postrun
+  - dbt-postgres:run
+  - dbt-postgres:test
