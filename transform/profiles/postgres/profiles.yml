@@ -7,29 +7,29 @@ meltano:
   outputs:
     local:
       type: postgres
-      host: "{{ env_var('DBT_POSTGRES_HOST') }}"
-      user: "{{ env_var('DBT_POSTGRES_USER', '') }}"
-      password: "{{ env_var('DBT_POSTGRES_PASSWORD', '') }}"
-      port: "{{ env_var('DBT_POSTGRES_PORT', '5432') | int }}"
-      dbname: "{{ env_var('DBT_POSTGRES_DBNAME', '') }}"
-      schema: "{{ env_var('DBT_POSTGRES_SCHEMA') }}"
+      host: "{{ env_var('WAREHOUSE_HOST') }}"
+      user: "{{ env_var('WAREHOUSE_USER', '') }}"
+      password: "{{ env_var('WAREHOUSE_PASSWORD', '') }}"
+      port: "{{ env_var('WAREHOUSE_PORT', '5432') | int }}"
+      dbname: "{{ env_var('WAREHOUSE_DBNAME', '') }}"
+      schema: "{{ env_var('DBT_POSTGRES_SCHEMA', 'public') }}"
       threads: 2
       keepalives_idle: 0 # default 0, indicating the system default
       connect_timeout: 10 # default 10 seconds
-      search_path: "{{ env_var('DBT_POSTGRES_SEARCH_PATH', '') }}" # optional, override the default postgres search_path
-      role: "{{ env_var('DBT_POSTGRES_ROLE', '') }}" # optional, set the role dbt assumes when executing queries
-      # sslmode: "{{ env_var('DBT_POSTGRES_SSLMODE', '').split() }}" # optional, set the sslmode used to connect to the database
+      search_path: "{{ env_var('WAREHOUSE_SEARCH_PATH', '') }}" # optional, override the default postgres search_path
+      role: "{{ env_var('WAREHOUSE_ROLE', '') }}" # optional, set the role dbt assumes when executing queries
+      # sslmode: "{{ env_var('WAREHOUSE_SSLMODE', '').split() }}" # optional, set the sslmode used to connect to the database
     prod:
       type: postgres
-      host: "{{ env_var('DBT_POSTGRES_HOST') }}"
-      user: "{{ env_var('DBT_POSTGRES_USER') }}"
-      password: "{{ env_var('DBT_POSTGRES_PASSWORD') }}"
-      port: "{{ env_var('DBT_POSTGRES_PORT', '5432') | int }}"
-      dbname: "{{ env_var('DBT_POSTGRES_DBNAME', '') }}"
-      schema: "{{ env_var('DBT_POSTGRES_SCHEMA') }}"
+      host: "{{ env_var('WAREHOUSE_HOST') }}"
+      user: "{{ env_var('WAREHOUSE_USER') }}"
+      password: "{{ env_var('WAREHOUSE_PASSWORD') }}"
+      port: "{{ env_var('WAREHOUSE_PORT', '5432') | int }}"
+      dbname: "{{ env_var('WAREHOUSE_DBNAME', '') }}"
+      schema: "{{ env_var('DBT_POSTGRES_SCHEMA', 'public') }}"
       threads: 6
       keepalives_idle: 0 # default 0, indicating the system default
       connect_timeout: 10 # default 10 seconds
-      search_path: "{{ env_var('DBT_POSTGRES_SEARCH_PATH', '') }}" # optional, override the default postgres search_path
-      role: "{{ env_var('DBT_POSTGRES_ROLE', '') }}" # optional, set the role dbt assumes when executing queries
-      # sslmode: "{{ env_var('DBT_POSTGRES_SSLMODE', '').split() }}" # optional, set the sslmode used to connect to the database
+      search_path: "{{ env_var('WAREHOUSE_HOST_SEARCH_PATH', '') }}" # optional, override the default postgres search_path
+      role: "{{ env_var('WAREHOUSE_HOST_ROLE', '') }}" # optional, set the role dbt assumes when executing queries
+      # sslmode: "{{ env_var('WAREHOUSE_HOST_SSLMODE', '').split() }}" # optional, set the sslmode used to connect to the database

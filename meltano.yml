@@ -73,7 +73,7 @@ plugins:
       home: $MELTANO_PROJECT_ROOT/orchestrate
   - name: yoyo-postgres
     namespace: yoyo_postgres
-    pip_url: yoyo-migrations==7.3.2 psycopg2>=2.9.1
+    pip_url: yoyo-migrations==7.3.2 psycopg2~=2.9.1
     executable: yoyo
     settings:
     - name: database
@@ -86,6 +86,11 @@ plugins:
       apply-setup: apply -m 'setup$'
       new-postrun: new -m postrun
       apply-postrun: apply -m 'postrun$'
+  - name: sqlfluff
+    variant: sqlfluff
+    pip_url: sqlfluff~=0.13.2 sqlfluff-templater-dbt~=0.13.2 dbt-postgres~=1.0.0
+    commands:
+      fix: fix    
 environments:
 - name: local
   config:

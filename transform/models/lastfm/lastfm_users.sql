@@ -3,16 +3,16 @@ with _src_users as (
 ),
 
 lastfm_users as (
-  SELECT
+  select
     username,
-    realname as name,
+    realname as full_name,
     url,
     country,
     age,
     gender,
     subscriber as is_subscriber,
     {{ eastern_time('registered_at') }} as registered_at
-  FROM _src_users
+  from _src_users
 )
 
 select * from lastfm_users

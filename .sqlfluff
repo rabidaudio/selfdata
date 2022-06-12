@@ -1,0 +1,26 @@
+[sqlfluff]
+dialect = postgres
+templater = dbt
+output_line_length = 80
+ignore_templated_areas = True
+runaway_limit = 100
+
+# L031: It's convenient to make shorter aliases for
+#     join tables for readability.
+#     https://docs.sqlfluff.com/en/stable/rules.html#sqlfluff.core.rules.Rule_L031
+exclude_rules = L031
+
+[sqlfluff:rules]
+tab_space_size = 2
+max_line_length = 120
+indent_unit = space
+comma_style = trailing
+
+[sqlfluff:rules:L014]  # Unquoted identifiers
+extended_capitalisation_policy = lower
+
+[sqlfluff:templater:dbt]
+project_dir = transform
+profiles_dir = transform/profiles/postgres
+profile = meltano
+

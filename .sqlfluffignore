@@ -1,0 +1,3 @@
+migrations/
+.meltano/
+transform/dbt_packages/

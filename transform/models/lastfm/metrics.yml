@@ -13,11 +13,11 @@ models:
       - dbt_utils.unique_combination_of_columns:
           combination_of_columns:
             - username
-            - hour
+            - hour_of_day
     columns:
       - name: username
         tests: [not_null]
-      - name: hour
+      - name: hour_of_day
         tests:
           - not_null
           - accepted_values:

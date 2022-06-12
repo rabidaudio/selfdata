@@ -3,7 +3,7 @@ with _src_scrobbles as (
 ),
 
 scrobbles as (
-  SELECT
+  select
     {{ eastern_time('date') }} as scrobbled_at,
     username,
     name as track_name,
@@ -13,8 +13,8 @@ scrobbles as (
     artist__mbid as musicbrainz_artist_id,
     album__mbid as musicbrainz_release_id,
     loved as is_loved
-  FROM _src_scrobbles
-  order by username, scrobbled_at desc
+  from _src_scrobbles
+  order by username asc, scrobbled_at desc
 )
 
 select * from scrobbles
