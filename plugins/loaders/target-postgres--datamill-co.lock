@@ -1,0 +1,187 @@
+{
+  "plugin_type": "loaders",
+  "name": "target-postgres",
+  "namespace": "target_postgres",
+  "variant": "datamill-co",
+  "label": "PostgreSQL",
+  "docs": "https://hub.meltano.com/loaders/target-postgres--datamill-co",
+  "repo": "https://github.com/datamill-co/target-postgres",
+  "pip_url": "singer-target-postgres",
+  "settings_group_validation": [
+    [
+      "postgres_host",
+      "postgres_port",
+      "postgres_database",
+      "postgres_username",
+      "postgres_password",
+      "postgres_schema"
+    ]
+  ],
+  "settings": [
+    {
+      "name": "postgres_host",
+      "value": "localhost",
+      "label": "Host"
+    },
+    {
+      "name": "postgres_port",
+      "kind": "integer",
+      "value": 5432,
+      "label": "Port"
+    },
+    {
+      "name": "postgres_database",
+      "label": "Database"
+    },
+    {
+      "name": "postgres_username",
+      "label": "Username"
+    },
+    {
+      "name": "postgres_password",
+      "kind": "password",
+      "label": "Password"
+    },
+    {
+      "name": "postgres_schema",
+      "aliases": [
+        "schema"
+      ],
+      "value": "$MELTANO_EXTRACT__LOAD_SCHEMA",
+      "label": "Schema",
+      "description": "Note that `$MELTANO_EXTRACT__LOAD_SCHEMA` [will expand to](https://docs.meltano.com/guide/configuration.html#expansion-in-setting-values) the value of the [`load_schema` extra](https://docs.meltano.com/concepts/plugins#load-schema-extra) for the extractor used in the pipeline, which defaults to the extractor's namespace, e.g. `tap_gitlab` for [`tap-gitlab`](/extractors/gitlab).\n\nName of the schema where the tables will be created. If `schema_mapping`\nis not defined then every stream sent by the tap is loaded into this schema.\n"
+    },
+    {
+      "name": "postgres_sslmode",
+      "value": "prefer",
+      "label": "SSL Mode",
+      "description": "Refer to the [libpq docs](https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-PARAMKEYWORDS) for more information about SSL."
+    },
+    {
+      "name": "postgres_sslcert",
+      "value": "~/.postgresql/postgresql.crt",
+      "label": "SSL Cert",
+      "description": "Only used if a SSL request w/ a client certificate is being made"
+    },
+    {
+      "name": "postgres_sslkey",
+      "value": "~/.postgresql/postgresql.key",
+      "label": "SSL Key",
+      "description": "Only used if a SSL request w/ a client certificate is being made"
+    },
+    {
+      "name": "postgres_sslrootcert",
+      "value": "~/.postgresql/root.crt",
+      "description": "Used for authentication of a server SSL certificate"
+    },
+    {
+      "name": "postgres_sslcrl",
+      "value": "~/.postgresql/root.crl",
+      "label": "SSL CRL",
+      "description": "Used for authentication of a server SSL certificate"
+    },
+    {
+      "name": "invalid_records_detect",
+      "kind": "boolean",
+      "value": true,
+      "label": "Invalid Records Detection",
+      "description": "Include `false` in your config to disable `target-postgres` from crashing on invalid records"
+    },
+    {
+      "name": "invalid_records_threshold",
+      "kind": "integer",
+      "value": 0,
+      "label": "Invalid Records Threshold",
+      "description": "Include a positive value `n` in your config to allow for `target-postgres` to encounter at most `n` invalid records per stream before giving up."
+    },
+    {
+      "name": "disable_collection",
+      "kind": "boolean",
+      "value": false,
+      "label": "Disable Collection",
+      "description": "Include `true` in your config to disable [Singer Usage Logging](https://github.com/datamill-co/target-postgres#usage-logging)."
+    },
+    {
+      "name": "logging_level",
+      "kind": "options",
+      "value": "INFO",
+      "label": "Logging Level",
+      "description": "The level for logging. Set to `DEBUG` to get things like queries executed, timing of those queries, etc.",
+      "options": [
+        {
+          "label": "Debug",
+          "value": "DEBUG"
+        },
+        {
+          "label": "Info",
+          "value": "INFO"
+        },
+        {
+          "label": "Warning",
+          "value": "WARNING"
+        },
+        {
+          "label": "Error",
+          "value": "ERROR"
+        },
+        {
+          "label": "Critical",
+          "value": "CRITICAL"
+        }
+      ]
+    },
+    {
+      "name": "persist_empty_tables",
+      "kind": "boolean",
+      "value": false,
+      "label": "Persist Empty Tables",
+      "description": "Whether the Target should create tables which have no records present in Remote."
+    },
+    {
+      "name": "max_batch_rows",
+      "kind": "integer",
+      "value": 200000,
+      "label": "Max Batch Rows",
+      "description": "The maximum number of rows to buffer in memory before writing to the destination table in Postgres"
+    },
+    {
+      "name": "max_buffer_size",
+      "kind": "integer",
+      "value": 104857600,
+      "label": "Max Buffer Size",
+      "description": "The maximum number of bytes to buffer in memory before writing to the destination table in Postgres. Default: 100MB in bytes\n"
+    },
+    {
+      "name": "batch_detection_threshold",
+      "kind": "integer",
+      "label": "Batch Detection Threshold",
+      "description": "How often, in rows received, to count the buffered rows and bytes to\ncheck if a flush is necessary.\n\nThere's a slight performance penalty to checking\nthe buffered records count or bytesize, so this controls how often this is polled\nin order to mitigate the penalty. This value is usually not necessary to set as\nthe default is dynamically adjusted to check reasonably often.\n"
+    },
+    {
+      "name": "state_support",
+      "kind": "boolean",
+      "value": true,
+      "label": "State Support",
+      "description": "Whether the Target should emit `STATE` messages to stdout for further\nconsumption.\n\nIn this mode, which is on by default, STATE messages are buffered\nin memory until all the records that occurred before them are flushed according\nto the batch flushing schedule the target is configured with.\n"
+    },
+    {
+      "name": "add_upsert_indexes",
+      "kind": "boolean",
+      "value": true,
+      "label": "Add Upsert Indexes",
+      "description": "Whether the Target should create column indexes on the important columns\nused during data loading.\n\nThese indexes will make data loading slightly slower\nbut the deduplication phase much faster. Defaults to on for better baseline performance.\n"
+    },
+    {
+      "name": "before_run_sql",
+      "label": "Before Run SQL",
+      "description": "Raw SQL statement(s) to execute as soon as the connection to Postgres is opened by the target. Useful for setup like `SET ROLE` or other connection state that is important."
+    },
+    {
+      "name": "after_run_sql",
+      "label": "After Run SQL",
+      "description": "Raw SQL statement(s) to execute as soon as the connection to Postgres is opened by the target. Useful for setup like `SET ROLE` or other connection state that is important."
+    }
+  ],
+  "dialect": "postgres",
+  "target_schema": "$TARGET_POSTGRES_POSTGRES_SCHEMA"
+}

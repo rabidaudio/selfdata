@@ -34,6 +34,18 @@ plugins:
     select:
     - '*.*'
     - '!*.*image*'
+  loaders:
+  - name: target-postgres
+    variant: datamill-co
+    pip_url: singer-target-postgres
+  transformers:
+  - name: dbt-postgres
+    variant: dbt-labs
+    pip_url: dbt-core~=1.0.0 dbt-postgres~=1.0.0
+    commands:
+      generate-source: 'run-operation generate_source --args ''{"schema_name": "$MELTANO_LOAD_SCHEMA"}''
+
+        '
   utilities:
   - name: dagster
     namespace: dagster
@@ -54,29 +66,59 @@ plugins:
         args: -w $DAGSTER_HOME/workspace.yaml -h 0.0.0.0
         executable: dagit
       test:
-        args: ''
+        args: -v
         executable: pytest
     config:
       schedule_timezone: America/New_York
       database_url: $DAGSTERDB_URL
       home: $MELTANO_PROJECT_ROOT/orchestrate
-schedules:
-- name: scrobbles
-  extractor: tap-lastfm
-  loader: target-postgres
-  transform: skip
-  interval: '@daily'
-  start_date: 2021-11-17 07:15:23.937016
+  - name: yoyo-postgres
+    namespace: yoyo_postgres
+    pip_url: yoyo-migrations==7.3.2 psycopg2>=2.9.1
+    executable: yoyo
+    settings:
+    - name: database
+      env: YOYO_POSTGRES_DATABASE_URL
+    - name: subdir
+      env: YOYO_POSTGRES_SUBDIR
+      value: migrations
+    commands:
+      new: new
+      apply: apply
 environments:
 - name: local
   config:
     plugins:
+      extractors:
+      - name: tap-lastfm
+        config:
+          start_date: '2022-06-01'
+          usernames:
+          - rabidaudio
+          - kath_ebooks
       loaders:
       - name: target-postgres
         config:
-          postgres_database: selfdata
-        variant: datamill-co
-        pip_url: singer-target-postgres
+          postgres_host: $WAREHOUSE_HOST
+          postgres_database: $WAREHOUSE_DBNAME
+      transformers:
+      - name: dbt-postgres
+        config:
+          host: $WAREHOUSE_HOST
+          dbname: $WAREHOUSE_DBNAME
+          schema: public
+      utilities:
+      - name: yoyo-postgres
+        config:
+          database: postgresql://localhost:5432/selfdata
   env:
     DAGSTERDB_URL: postgresql://localhost:5432/dagster
-    MELTANO_UI_WORKERS: '1'
+    WAREHOUSE_HOST: localhost
+    WAREHOUSE_DBNAME: selfdata
+jobs:
+- name: deploy
+  tasks:
+  - yoyo-postgres:apply dbt-postgres:run
+- name: lastfm
+  tasks:
+  - tap-lastfm target-postgres dbt-postgres:test dbt-postgres:run
