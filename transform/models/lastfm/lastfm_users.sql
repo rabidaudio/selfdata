@@ -11,7 +11,7 @@ lastfm_users as (
     age,
     gender,
     subscriber as is_subscriber,
-    registered_at
+    {{ eastern_time('registered_at') }} as registered_at
   FROM _src_users
 )
 

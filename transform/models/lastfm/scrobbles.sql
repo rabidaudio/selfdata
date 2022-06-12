@@ -4,7 +4,7 @@ with _src_scrobbles as (
 
 scrobbles as (
   SELECT
-    date as scrobbled_at,
+    {{ eastern_time('date') }} as scrobbled_at,
     username,
     name as track_name,
     artist__name as artist_name,
