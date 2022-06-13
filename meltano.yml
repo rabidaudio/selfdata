@@ -90,7 +90,13 @@ plugins:
     variant: sqlfluff
     pip_url: sqlfluff~=0.13.2 sqlfluff-templater-dbt~=0.13.2 dbt-postgres~=1.0.0
     commands:
-      fix: fix    
+      fix: fix
+schedules:
+- name: lastfm
+  interval: '@daily'
+  job: lastfm
+  env:
+    DBT_MODELS: +lastfm+
 environments:
 - name: local
   config:

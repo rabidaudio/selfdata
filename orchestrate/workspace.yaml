@@ -4,4 +4,4 @@ load_from:
   - python_package:
       package_name: orchestrate
       working_directory: orchestrate
-  
+  - python_file: meltano.py

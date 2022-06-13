@@ -8,6 +8,7 @@ setuptools.setup(
         "dagit==0.14.17",
         "dagster-aws==0.14.17",
         "dagster-postgres==0.14.17",
+        "dagster_shell==0.14.17",
         "pytest",
     ],
 )

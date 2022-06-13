@@ -32,7 +32,7 @@ absolute_scrobble_counts as (
     extract(hour from scrobbled_at)::integer as hour_of_day,
     count(*) as scrobble_count
   from recent_scrobbles
-  group by username, hour
+  group by username, hour_of_day
 ),
 
 absolute_scrobble_counts_for_all_rows as (
