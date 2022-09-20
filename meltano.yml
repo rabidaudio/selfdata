@@ -34,6 +34,26 @@ plugins:
     select:
     - '*.*'
     - '!*.*image*'
+  - name: tap-lichess
+    namespace: tap_lichess
+    pip_url: git+https://github.com/rabidaudio/tap-lichess.git@v1.0.0
+    executable: tap-lichess
+    capabilities:
+    - catalog
+    - discover
+    - state
+    settings:
+    - name: auth_token
+      kind: password
+    - name: usernames
+      kind: array
+    config:
+      usernames:
+        - charlesjuliank
+        - chuckbruckus
+        - MaksimSundukov
+        - LivAgar
+        - Tom_Ripley
   loaders:
   - name: target-postgres
     variant: datamill-co
@@ -122,9 +142,10 @@ environments:
       utilities:
       - name: yoyo-postgres
         config:
-          database: postgresql://localhost:5432/selfdata
+          database: $WAREHOUSE_URL
   env:
     DAGSTERDB_URL: postgresql://localhost:5432/dagster
+    WAREHOUSE_URL: postgresql://localhost:5432/selfdata
     WAREHOUSE_HOST: localhost
     WAREHOUSE_DBNAME: selfdata
 jobs:
@@ -132,9 +153,10 @@ jobs:
   tasks:
   - dbt-postgres:deps yoyo-postgres:apply-setup
   - dbt-postgres:run
-- name: lastfm
+- name: pipeline
   tasks:
   - tap-lastfm target-postgres
+  - tap-lichess target-postgres
   - yoyo-postgres:apply-postrun
   - dbt-postgres:run
   - dbt-postgres:test
