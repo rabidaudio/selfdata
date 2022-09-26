@@ -24,11 +24,11 @@ compute_logs:
 scheduler:
   module: dagster.core.scheduler
   class: DagsterDaemonScheduler
-# run_coordinator:
-#   module: dagster.core.run_coordinator
-#   class: QueuedRunCoordinator
-#   config:
-#     max_concurrent_runs: 10
-# run_launcher:
-#   module: dagster.core.launcher
-#   class: DefaultRunLauncher
+run_coordinator:
+  module: dagster.core.run_coordinator
+  class: QueuedRunCoordinator
+  config:
+    max_concurrent_runs: 10
+run_launcher:
+  module: dagster.core.launcher
+  class: DefaultRunLauncher

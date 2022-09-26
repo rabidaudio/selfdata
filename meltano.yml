@@ -102,11 +102,9 @@ plugins:
       database_url: $DAGSTERDB_URL
       home: $MELTANO_PROJECT_ROOT/orchestrate
 schedules:
-- name: lastfm
+- name: pipeline
   interval: '@daily'
-  job: lastfm
-  env:
-    DBT_MODELS: +lastfm+
+  job: pipeline
 environments:
 - name: prod
 jobs:
