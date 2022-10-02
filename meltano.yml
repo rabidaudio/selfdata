@@ -76,35 +76,15 @@ plugins:
       generate-source: run-operation generate_source --args ''{"schema_name":"$MELTANO_LOAD_SCHEMA","generate_columns":true}''
       test-freshness: source freshness
   utilities:
-  - name: dagster
-    namespace: dagster
-    pip_url: -e orchestrate
-    executable: dagster
-    settings:
-    - name: home
-      env: DAGSTER_HOME
-    - name: schedule_timezone
-      env: DAGSTER_SCHEDULE_TIMEZONE
-    - name: database_url
-      env: DAGSTERDB_URL
+  - name: sqlfluff
+    variant: sqlfluff
+    pip_url: sqlfluff~=0.13.2 sqlfluff-templater-dbt~=0.13.2 dbt-postgres~=1.0.0
     commands:
-      scheduler:
-        args: run -w $DAGSTER_HOME/workspace.yaml
-        executable: dagster-daemon
-      ui:
-        args: -w $DAGSTER_HOME/workspace.yaml -h 0.0.0.0
-        executable: dagit
-      test:
-        args: -v
-        executable: pytest
-    config:
-      schedule_timezone: America/New_York
-      database_url: $DAGSTERDB_URL
-      home: $MELTANO_PROJECT_ROOT/orchestrate
+      fix: fix
 schedules:
-- name: pipeline
+- name: daily_pipeline
   interval: '@daily'
-  job: pipeline
+  job: daily_pipeline
 environments:
 - name: prod
 jobs:
@@ -112,7 +92,7 @@ jobs:
   tasks:
   - dbt-athena:deps
   - dbt-athena:run
-- name: pipeline
+- name: daily_pipeline
   tasks:
   - tap-lastfm target-athena
   - tap-lichess target-athena

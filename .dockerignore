@@ -5,6 +5,7 @@
 /.vscode
 .logs
 *.egg-info
+/.git
 
 .DS_Store
 

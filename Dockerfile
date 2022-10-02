@@ -1,9 +1,9 @@
 FROM python:3.10
 
-ENV PYTHONUNBUFFERED 1
 WORKDIR /project
+ENV PYTHONUNBUFFERED 1
 ENV PATH="/project/.venv/bin:$PATH"
-EXPOSE 3000
+CMD meltano ui --bind-port $PORT
 
 RUN apt-get update && \
   apt-get install -yy \
@@ -18,8 +18,12 @@ COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
 COPY meltano.yml meltano.yml
-COPY orchestrate/setup.py orchestrate/setup.py
 RUN meltano install
 
 COPY . .
 # RUN meltano invoke dbt-athena deps
+
+# Heroku runs as non-root user, which complicates image building
+RUN useradd -m selfdata
+RUN chown -R selfdata /project
+USER selfdata
