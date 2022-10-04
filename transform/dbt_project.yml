@@ -1,4 +1,4 @@
-name: selfdata
+name: my_meltano_project
 version: '1.0'
 profile: meltano
 config-version: 2
@@ -23,4 +23,7 @@ clean-targets:
 - dbt_packages
 - logs
 models:
-  selfdata: null
+  my_meltano_project:
+    # https://github.com/Tomme/dbt-athena#table-configuration
+    format: json
+    write_compression: gzip

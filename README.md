@@ -1,4 +1,5 @@
 https://developers.google.com/fit/scenarios/read-daily-step-total#rest
+https://docs.aws.amazon.com/athena/latest/ug/presto-functions.html
 
 
 # Deploy

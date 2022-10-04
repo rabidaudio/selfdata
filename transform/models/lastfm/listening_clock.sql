@@ -1,3 +1,9 @@
+{{
+  config(
+    external_location = "data/listening_clock",
+    materialized = 'table',
+  )
+}}
 with _ref_scrobbles as (
   select * from {{ ref('scrobbles') }}
 ),
@@ -6,33 +12,31 @@ _ref_users as (
   select * from {{ ref('lastfm_users') }}
 ),
 
-all_usernames as (
-  select username from _ref_users
-),
-
 recent_scrobbles as (
   select
+    u.username,
+    hour(at_timezone(scrobbled_at, coalesce(u.timezone, 'America/New_York'))) as hour_of_day
+  from _ref_scrobbles s
+  inner join _ref_users u on u.username = s.username
+  -- using scrobbled_at_month to get partitioning
+  where date(s.scrobbled_at_month) > now() - interval '6' month
+),
+
+scrobble_counts_by_hour as (
+  select
     username,
-    scrobbled_at
-  from _ref_scrobbles
-  where scrobbled_at > now() - interval '6 months'
+    hour_of_day,
+    count(*) as scrobble_count
+  from recent_scrobbles
+  group by username, hour_of_day
 ),
 
 all_rows as (
   select
     h.hour_of_day,
     u.username
-  from all_usernames as u
-  cross join generate_series(0, 23) as h(hour_of_day)
-),
-
-absolute_scrobble_counts as (
-  select
-    username,
-    extract(hour from scrobbled_at)::integer as hour_of_day,
-    count(*) as scrobble_count
-  from recent_scrobbles
-  group by username, hour_of_day
+  from _ref_users as u
+  cross join UNNEST(SEQUENCE(0,23)) as h(hour_of_day)
 ),
 
 absolute_scrobble_counts_for_all_rows as (
@@ -41,7 +45,7 @@ absolute_scrobble_counts_for_all_rows as (
     r.hour_of_day,
     coalesce(s.scrobble_count, 0) as scrobble_count
   from all_rows as r
-  left join absolute_scrobble_counts as s
+  left join scrobble_counts_by_hour as s
     on s.hour_of_day = r.hour_of_day and r.username = s.username
 ),
 
@@ -50,12 +54,8 @@ relative_scrobble_counts as (
     username,
     hour_of_day,
     scrobble_count as absolute_plays,
-    coalesce(
-      nullif(scrobble_count::decimal, 0)
-      / nullif(
-        sum(scrobble_count) over (partition by username),
-        0), 0
-    ) as relative_plays
+    cast(scrobble_count as double) /
+      cast(nullif(sum(scrobble_count) over (partition by username), 0) as double) as relative_plays
   from absolute_scrobble_counts_for_all_rows
   order by username, hour_of_day
 )
