@@ -1,6 +1,6 @@
 {{
   config(
-    external_location = config.get('s3_staging_dir') + "data/listening_clock",
+    external_location = target.get('s3_staging_dir') + "data/listening_clock",
     materialized = 'table',
   )
 }}
