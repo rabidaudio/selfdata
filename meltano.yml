@@ -72,17 +72,26 @@ plugins:
   - name: dbt-athena
     inherit_from: dbt
     pip_url: dbt-core~=1.0.0 dbt-athena-adapter~=1.0.1
-    config:
-      profiles_dir: $MELTANO_PROJECT_ROOT/transform/profiles/athena
     commands:
       generate-source: run-operation generate_source --args ''{"schema_name":"$MELTANO_LOAD_SCHEMA","generate_columns":true}''
       test-freshness: source freshness
+    config:
+      profiles_dir: $MELTANO_PROJECT_ROOT/transform/profiles/athena
+      s3_staging_dir: $WAREHOUSE_STAGING_DIR
   utilities:
   - name: sqlfluff
     variant: sqlfluff
     pip_url: sqlfluff~=0.13.2 sqlfluff-templater-dbt~=0.13.2 dbt-postgres~=1.0.0
     commands:
       fix: fix
+  - name: kms
+    namespace: kms
+    pip_url: git+https://github.com/meltano/kms-ext.git
+    executable: kms
+    config:
+      key_id: 0fa127ec-17d0-4d96-9ffc-cc86d903903c
+    commands:
+      encrypt: encrypt $KMS_KEY_ID meltano.pubkey --dotenv-path .env
 schedules:
 - name: daily_pipeline
   interval: '@daily'
@@ -92,6 +101,11 @@ environments:
   env:
     WAREHOUSE_BUCKET: audio-rabid-selfdata
     WAREHOUSE_STAGING_DIR: s3://audio-rabid-selfdata/_staging
+    WAREHOUSE_REGION: us-east-1
+- name: sandbox
+  env:
+    WAREHOUSE_BUCKET: audio-rabid-selfdata
+    WAREHOUSE_STAGING_DIR: s3://audio-rabid-selfdata/_sandbox/_staging
     WAREHOUSE_REGION: us-east-1
 jobs:
 - name: daily_pipeline
