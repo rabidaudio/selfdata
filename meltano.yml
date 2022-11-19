@@ -94,10 +94,6 @@ environments:
     WAREHOUSE_STAGING_DIR: s3://audio-rabid-selfdata/_staging
     WAREHOUSE_REGION: us-east-1
 jobs:
-- name: deploy
-  tasks:
-  - dbt-athena:deps
-  - dbt-athena:run
 - name: daily_pipeline
   tasks:
   - tap-lastfm target-athena

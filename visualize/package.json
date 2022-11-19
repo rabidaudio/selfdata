@@ -1,0 +1,21 @@
+{
+  "name": "selfdata",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "build": "evidence build",
+    "dev": "evidence dev -o",
+    "test": "evidence build"
+  },
+  "engines": {
+    "npm": ">=7.0.0",
+    "node": ">=14.0.0"
+  },
+  "type": "module",
+  "dependencies": {
+    "@evidence-dev/evidence": "^5.0.12"
+  },
+  "main": "index.js",
+  "author": "cjk@rabidaudio.com",
+  "license": "UNLICENSED"
+}
