@@ -8,6 +8,6 @@ meltano:
     prod:
       type: athena
       database: awsdatacatalog
-      s3_staging_dir: "s3://{{ env_var('WAREHOUSE_BUCKET') }}/dbt"
+      s3_staging_dir: "s3://{{ env_var('WAREHOUSE_BUCKET') }}/dbt/"
       region_name: "{{ env_var('WAREHOUSE_REGION') }}"
       schema: analytics

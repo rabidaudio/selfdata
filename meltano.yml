@@ -102,5 +102,4 @@ jobs:
   tasks:
   - tap-lastfm target-athena
   - tap-lichess target-athena
-  # - dbt-athena:run
-  # - dbt-athena:test
+  - dbt-athena:run
