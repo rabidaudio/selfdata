@@ -5,7 +5,13 @@ config:
 meltano:
   target: "{{ env_var('MELTANO_ENVIRONMENT', 'local') }}"
   outputs:
-    prod:
+  #   prod:
+  #     type: athena
+  #     database: awsdatacatalog
+  #     s3_staging_dir: "s3://{{ env_var('WAREHOUSE_BUCKET') }}/dbt/"
+  #     region_name: "{{ env_var('WAREHOUSE_REGION') }}"
+  #     schema: analytics
+    sandbox:
       type: athena
       database: awsdatacatalog
       s3_staging_dir: "s3://{{ env_var('WAREHOUSE_BUCKET') }}/dbt/"
