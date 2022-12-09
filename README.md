@@ -25,8 +25,11 @@ git push origin main
 # TODO
 
 - Use evidence.dev for querying: [BLOCKED] see https://github.com/evidence-dev/evidence/pull/473 https://github.com/evidence-dev/evidence/issues/486
+  - maybe duckdb intermediary? dagster-duckdb
 - sqlfluff
 - integrate more sources
 - orchestrator that allows python code to further transform
 - make dagster utility [BLCOKED] see https://github.com/meltano/meltano/pull/6409
 - switch to BATCH taps/targets on S3
+- update dbt
+- convert meltano into a cli resource
