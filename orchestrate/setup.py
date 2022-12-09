@@ -5,8 +5,6 @@ setup(
     packages=find_packages(exclude=["my_meltano_project_tests"]),
     install_requires=[
         "dagster",
-        "pandas",
-        "requests",
     ],
     extras_require={
         "dev": [
