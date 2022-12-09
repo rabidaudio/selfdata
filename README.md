@@ -21,3 +21,12 @@ Hosted using [Meltano Cloud](https://meltano.com/cloud/)!
 meltano invoke kms:encrypt
 git push origin main
 ```
+
+# TODO
+
+- Use evidence.dev for querying: [BLOCKED] see https://github.com/evidence-dev/evidence/pull/473 https://github.com/evidence-dev/evidence/issues/486
+- sqlfluff
+- integrate more sources
+- orchestrator that allows python code to further transform
+- make dagster utility [BLCOKED] see https://github.com/meltano/meltano/pull/6409
+- switch to BATCH taps/targets on S3

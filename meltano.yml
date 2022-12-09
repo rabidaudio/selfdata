@@ -88,10 +88,32 @@ plugins:
     namespace: kms
     pip_url: git+https://github.com/meltano/kms-ext.git
     executable: kms
-    config:
-      key_id: 0fa127ec-17d0-4d96-9ffc-cc86d903903c
     commands:
       encrypt: encrypt $KMS_KEY_ID meltano.pubkey --dotenv-path .env
+    config:
+      key_id: 0fa127ec-17d0-4d96-9ffc-cc86d903903c
+  - name: dagster
+    namespace: dagster
+    pip_url: -e orchestrate[dev]
+    executable: dagster
+    settings:
+      - name: schedule_timezone
+        env: DAGSTER_SCHEDULE_TIMEZONE
+      - name: home
+        env: DAGSTER_HOME
+        value: $MELTANO_PROJECT_ROOT/orchestrate
+    # workdir: $DAGSTER_HOME
+    commands:
+      ui:
+        executable: dagit
+        args: ''
+      run_pipeline:
+        args: job execute -m my_meltano_project
+      # test:
+      # fix:
+    config:
+      schedule_timezone: America/New_York
+      
 schedules:
 - name: daily_pipeline
   interval: '@daily'

@@ -1,0 +1,9 @@
+# I'm considering integrating Dagster, not for it's orchestrator/dagit but just for it's ability to pipeline tasks. So my meltano schedule would be something like dagster:run_pipeline which would use software-defined assets to determine what tasks to run. 
+# This is purely hypothetical at this point, just prototyping currently. But dagster would want its own storage to operate. I guess I don't really care about this though; Meltano Cloud can handle the log storage, job reporting, etc; I don't care if dagster forgets about runs between deploys
+
+# storage:
+#   sqlite:
+#     base_dir: orchestrate
+run_launcher:
+  module: dagster.core.launcher
+  class: DefaultRunLauncher
