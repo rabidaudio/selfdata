@@ -21,4 +21,3 @@ order by month, username
     y=listens 
     series=username 
 />
-<!-- https://github.com/rabidaudio/lfm-age-stats/blob/master/app/javascript/components/Show/index.js -->

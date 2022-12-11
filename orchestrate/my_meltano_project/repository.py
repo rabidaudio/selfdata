@@ -1,7 +1,7 @@
 from dagster import load_assets_from_package_module, repository, with_resources
 
 from my_meltano_project import assets
-from my_meltano_project.assets.meltano import meltano_el_assets, meltano_run
+from my_meltano_project.assets.meltano import meltano_el_assets, meltano_run_job
 
 import json
 from dagster_dbt import load_assets_from_dbt_manifest, dbt_cli_resource
@@ -21,10 +21,13 @@ def dbt_assets():
 def my_meltano_project():
     return [
         load_assets_from_package_module(assets),
-        meltano_run,
-        *meltano_el_assets([
-            'tap-lichess',
-            'tap-lastfm',
-        ]),
+        meltano_run_job,
+        *meltano_el_assets(
+            taps=[
+                'tap-lichess',
+                'tap-lastfm',
+            ],
+            target="target-athena"
+        ),
         *dbt_assets(),
     ]

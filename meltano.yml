@@ -111,6 +111,9 @@ plugins:
         executable: dagit
         args: ''
       run_pipeline: job execute -m my_meltano_project
+      test: 
+        executable: pytest
+        args: ''
     config:
       schedule_timezone: America/New_York
 
