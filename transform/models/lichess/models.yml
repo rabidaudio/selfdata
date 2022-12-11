@@ -23,3 +23,5 @@ models:
         tests:
           - accepted_values:
               values: [white, black]
+  - name: chess_outcomes_by_month
+    description: Outcome statistics per player aggregated monthly
