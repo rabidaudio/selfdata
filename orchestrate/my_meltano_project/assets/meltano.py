@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 import re
 import shlex
@@ -13,6 +14,7 @@ from dagster import (
     Failure,
     Noneable,
     OpExecutionContext,
+    Output,
     get_dagster_logger,
     job,
     multi_asset,
@@ -48,6 +50,7 @@ def _parse_selected_properties(data: str) -> List[str]:
     return props
 
 
+# TODO: cache these
 def _parse_unique_streams(data: str) -> List[str]:
     return set([prop.split(".")[0] for prop in _parse_selected_properties(data)])
 
@@ -123,7 +126,8 @@ def meltano_run(config: dict) -> int:
             line = line.rstrip()
             try:
                 data = json.loads(line)
-                logger.log(data["level"], data["event"])
+                level = logging.getLevelName(data["level"].upper())
+                logger.log(level, data["event"])
             except json.JSONDecodeError:
                 logger.info(line)
 
@@ -170,13 +174,12 @@ def meltano_el_assets(taps, target, **kwargs) -> List[AssetsDefinition]:
     for tap in taps:
         print(f"determining streams for {tap}")
         streams = get_streams(tap)
+        namespace = _tap_name_to_namespace(tap)
 
         @multi_asset(
             name=sanitize_name(f"meltano_el_{tap}_{target}"),
             outs={
-                stream: AssetOut(
-                    key_prefix=_tap_name_to_namespace(tap), dagster_type=None
-                )
+                stream: AssetOut(key_prefix=namespace, dagster_type=None)
                 for stream in streams
             },
             group_name=None,
@@ -188,6 +191,8 @@ def meltano_el_assets(taps, target, **kwargs) -> List[AssetsDefinition]:
                     **kwargs,
                 }
             )
+            for stream in streams:
+                yield Output(f"{namespace}/{stream}", output_name=stream)
 
         assets.append(_meltano_el)
     return assets
