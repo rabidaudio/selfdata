@@ -8,6 +8,8 @@ models:
         tests: [unique, not_null]
   - name: scrobbles
     description: A song listened to on Last.FM.
+  - name: listens_per_month
+    description: A count of scrobbles per month for all users
   # - name: listening_clock
   #   description: >
   #     6-month average of number of listens by hour of day.

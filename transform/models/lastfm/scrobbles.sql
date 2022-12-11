@@ -7,8 +7,13 @@
 with _src_scrobbles as (
   select * from {{ source('tap_lastfm', 'scrobbles') }}
   {% if is_incremental() %}
+    -- where dt >= (select max(dt) from {{ this }})
     where date(dt) >= (select max(date(scrobbled_at_month)) from {{ this }})
   {% endif %}
+),
+
+_unique_scrobbles as (
+  {{ distinct_on('_src_scrobbles', ['username', 'date']) }}
 ),
 
 scrobbles as (
@@ -24,7 +29,7 @@ scrobbles as (
     -- partition columns must come at end
     cast(cast(date_trunc('month', cast("date" as timestamp)) as date) as varchar) as scrobbled_at_month,
     username
-  from _src_scrobbles
+  from _unique_scrobbles
   order by username asc, scrobbled_at desc
 )
 

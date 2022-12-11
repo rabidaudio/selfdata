@@ -112,7 +112,7 @@ plugins:
       ui:
         executable: dagit
         args: ''
-      run_pipeline: job execute -m my_meltano_project
+      materalize: job execute -m my_meltano_project --job __ASSET_JOB
       test: 
         executable: pytest
         args: -v
@@ -138,6 +138,4 @@ environments:
 jobs:
 - name: daily_pipeline
   tasks:
-  - tap-lastfm target-athena
-  - tap-lichess target-athena
-  - dbt-athena:run
+  - dbt-athena:compile dagster:materalize
