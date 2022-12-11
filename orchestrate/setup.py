@@ -13,6 +13,7 @@ setup(
         "dev": [
             "dagit",
             "pytest",
+            "tox",
         ]
     },
 )

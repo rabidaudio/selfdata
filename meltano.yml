@@ -115,7 +115,13 @@ plugins:
       run_pipeline: job execute -m my_meltano_project
       test: 
         executable: pytest
-        args: '-v'
+        args: -v
+      fix:
+        executable: tox
+        args: ''
+      test_lint:
+        executable: tox
+        args: -e lint
     config:
       schedule_timezone: America/New_York
 

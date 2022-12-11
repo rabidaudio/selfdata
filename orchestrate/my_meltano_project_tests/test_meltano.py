@@ -1,5 +1,4 @@
-import pytest
-
+# flake8: noqa E101
 from my_meltano_project.assets.meltano import _parse_unique_streams
 
 TEST_DATA = """
@@ -172,8 +171,8 @@ Selected attributes:
 	[selected ] users.tosViolation
 	[selected ] users.username
 	[selected ] users.verified
-"""
+"""  # noqa
 
 
 def test_parse_unique_streams():
-  assert _parse_unique_streams(TEST_DATA) == {'games', 'users'}
+    assert _parse_unique_streams(TEST_DATA) == {"games", "users"}

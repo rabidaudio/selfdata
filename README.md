@@ -33,6 +33,5 @@ git push origin main
 - convert meltano into a cli resource
 - musicbrainz dagster assets
 - athena query method
-- set up tox for dagster (black, isort, etc)
 - port listening age queries to evidence: https://github.com/rabidaudio/lfm-age-stats/blob/master/app/javascript/components/Show/index.js
 - update tap-lastfm sdk version
