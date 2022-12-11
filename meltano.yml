@@ -2,6 +2,8 @@ version: 1
 default_environment: sandbox
 send_anonymous_usage_stats: true
 project_id: 7719d6c0-e1ea-45f2-85e4-a647da2211dd
+state_backend:
+  uri: s3://audio-rabid-selfdata/_state
 plugins:
   extractors:
   - name: tap-lastfm
@@ -113,7 +115,7 @@ plugins:
       run_pipeline: job execute -m my_meltano_project
       test: 
         executable: pytest
-        args: ''
+        args: '-v'
     config:
       schedule_timezone: America/New_York
 
