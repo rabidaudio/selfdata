@@ -1,25 +1,24 @@
 # Games played
 
 ```chess_win_rates
--- TODO: make transforms rather than querying raw data
-select date_trunc('month', TO_TIMESTAMP(createdat / 1000)) as month,
-case winner
-when 'white' then case when players__white__user__id = username then 'won' else 'lost' end
-when 'black' then case when players__black__user__id = username then 'won' else 'lost' end
-else 'draw'
-end as outcome,
-count(1) as count
-from tap_lichess.games
+select month, total_won_games,  total_lost_games, total_drawn_games, round(score, 2) as score
+from chess_outcomes_by_month
 where username = 'charlesjuliank'
-group by month, outcome
-order by month, outcome
+order by month
 ```
 
 <AreaChart 
     data={chess_win_rates}  
-    x=month 
-    y=count
-    series=outcome
+    x=month
+    y={["total_won_games", "total_lost_games", "total_drawn_games"]}
+/>
+<!-- TODO: plot draws centered vertically, won above and lost below -->
+<!-- https://docs.evidence.dev/features/charts/custom-charts -->
+
+<LineChart 
+    data={chess_win_rates}  
+    x=month
+    y=score
 />
 
 # Favorite openings
@@ -27,16 +26,10 @@ order by month, outcome
 ## As white
 
 ```favorite_openings_white
-with top_openings as (
-  select opening__name as opening,
-  count(1) as count
-  from tap_lichess.games
-  where username = 'charlesjuliank' and players__white__user__id = 'charlesjuliank'
-  and opening__name is not null
-  group by opening
-)
-select * from top_openings
-order by count desc
+select opening_name, total_games, round(score, 2) as score
+from chess_openings
+where username = 'charlesjuliank' and side = 'white'
+order by total_games desc
 limit 10
 ```
 
@@ -48,16 +41,10 @@ limit 10
 ## As black
 
 ```favorite_openings_black
-with top_openings as (
-  select opening__name as opening,
-  count(1) as count
-  from tap_lichess.games
-  where username = 'charlesjuliank' and players__black__user__id = 'charlesjuliank'
-  and opening__name is not null
-  group by opening
-)
-select * from top_openings
-order by count desc
+select opening_name, total_games, round(score, 2)
+from chess_openings
+where username = 'charlesjuliank' and side = 'black'
+order by total_games desc
 limit 10
 ```
 

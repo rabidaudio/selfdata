@@ -14,6 +14,7 @@ DBT_TARGET_PATH = (
 
 
 def dbt_assets():
+    # TODO: run dbt compile first!
     with open(
         f"{DBT_TARGET_PATH}/manifest.json",
         "r",
@@ -25,7 +26,7 @@ def dbt_assets():
                 "dbt": dbt_cli_resource.configured(
                     {
                         "project_dir": DBT_PROJECT_PATH,
-                        "target_path": f"{DBT_TARGET_PATH}/dbt/target",
+                        "target_path": DBT_TARGET_PATH,
                         "profiles_dir": f"{DBT_PROJECT_PATH}/profiles/athena",
                     }
                 )

@@ -1,5 +1,5 @@
 # flake8: noqa E101
-from my_meltano_project.assets.meltano import _parse_unique_streams
+from my_meltano_project.assets.meltano import _parse_unique_streams, get_streams
 
 TEST_DATA = b"""
 2022-12-10T21:28:00.363104Z [info     ] The default environment 'sandbox' will be ignored for `meltano select`. To configure a specific environment, please use the option `--environment=<environment name>`.

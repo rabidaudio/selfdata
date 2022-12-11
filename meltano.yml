@@ -56,6 +56,8 @@ plugins:
       - MaksimSundukov
       - LivAgar
       - Tom_Ripley
+    select:
+    - '*.*'
   loaders:
   - name: target-athena
     variant: meltanolabs
@@ -111,17 +113,17 @@ plugins:
     commands:
       ui:
         executable: dagit
-        args: ''
+        args: '-p 4000'
       materalize: job execute -m my_meltano_project --job __ASSET_JOB
-      test: 
-        executable: pytest
+      test:
         args: -v
+        executable: pytest
       fix:
         executable: tox
-        args: ''
+        args: '-v'
       test_lint:
-        executable: tox
         args: -e lint
+        executable: tox
     config:
       schedule_timezone: America/New_York
 

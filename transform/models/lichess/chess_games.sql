@@ -29,7 +29,7 @@ games as (
 games_with_winner as (
     select *,
         player_white = username as is_white,
-        case when player_white = username then 'white' else 'back' end as side,
+        case when player_white = username then 'white' else 'black' end as side,
         case winner
         when 'white' then case when player_white = username then 'won' else 'lost' end
         when 'black' then case when player_black = username then 'won' else 'lost' end

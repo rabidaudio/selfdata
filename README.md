@@ -25,13 +25,12 @@ git push origin main
 # TODO
 
 - Use evidence.dev for querying: [BLOCKED] see https://github.com/evidence-dev/evidence/pull/473 https://github.com/evidence-dev/evidence/issues/486
-  - maybe duckdb intermediary? load data from athena into dagster-duckdb, then query via evidence
 - sqlfluff
 - integrate more sources
 - make dagster utility [BLOCKED] see https://github.com/meltano/meltano/pull/6409
 - switch to BATCH taps/targets on S3
 - convert meltano into a cli resource
 - musicbrainz dagster assets
-- athena query method
 - port listening age queries to evidence: https://github.com/rabidaudio/lfm-age-stats/blob/master/app/javascript/components/Show/index.js
 - update tap-lastfm sdk version
+- make sql conversion dynamic
