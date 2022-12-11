@@ -3,6 +3,7 @@ import os
 
 from dagster import load_assets_from_package_module, repository, with_resources
 from dagster_dbt import dbt_cli_resource, load_assets_from_dbt_manifest
+
 from my_meltano_project import assets
 from my_meltano_project.assets.meltano import meltano_el_assets, meltano_run_job
 

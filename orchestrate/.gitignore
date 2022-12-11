@@ -5,3 +5,4 @@ logs
 .tox
 .logs_queue
 .telemetry
+dist

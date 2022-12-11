@@ -1,10 +1,32 @@
+
+[tool.poetry]
+name = "my_meltano_project"
+version = "0.0.1"
+description = "Dagster project for selfdata, leveraging software-defined assets to orchestrate pipelines"
+license = "GPL-3.0-only"
+authors = ["Charles Julian Knight <cjk@rabidaudio.com>"]
+
 [build-system]
-requires = ["setuptools"]
-build-backend = "setuptools.build_meta"
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+dagster = "^1.1.6"
+dagster-dbt = "^0.17.6"
+dagster-pandas = "^0.17.6"
+pyathena = {version = "^2.17.0", extras = ["Pandas"]}
+
+[tool.poetry.group.dev.dependencies]
+dagit = "^1.1.6"
+pytest = "^7.2.0"
+tox = "^3.27"
+black = "^22.12.0"
+flake8 = "^6.0.0"
+isort = "^5.10.1"
 
 [tool.isort]
 profile = "black"
 multi_line_output = 3 # Vertical Hanging Indent
-src_paths = "tap_lastfm"
 
 # [tool.black]
