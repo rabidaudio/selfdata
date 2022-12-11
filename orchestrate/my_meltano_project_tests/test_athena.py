@@ -1,5 +1,7 @@
 import datetime
 
+import pandas as pd
+
 from my_meltano_project.assets.athena import query_athena
 
 
@@ -13,8 +15,13 @@ date '2012-08-08' + interval '2' day as date,
 time '01:00' + interval '3' hour as time
     """
     )
-    assert data.loc[0].to_dict().keys() == ["timestamp", "timestamptz", "date", "time"]
+    assert type(data) == pd.DataFrame
+    assert [k for k in data.loc[0].to_dict().keys()] == [
+        "timestamp",
+        "timestamptz",
+        "date",
+        "time",
+    ]
     assert type(data.loc[0].to_dict()["date"]) == datetime.date
-
-
-# def test_query_athena_with_params():
+    # TODO: pending PandasCursor bug
+    # assert type(data.loc[0].to_dict()["timestamp"]) == datetime.datetime
