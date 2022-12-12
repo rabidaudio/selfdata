@@ -18,8 +18,9 @@ recent_scrobbles as (
     hour(at_timezone(scrobbled_at, coalesce(u.timezone, 'America/New_York'))) as hour_of_day
   from _ref_scrobbles s
   inner join _ref_users u on u.username = s.username
-  -- using scrobbled_at_month to get partitioning
-  where date(s.scrobbled_at_month) > now() - interval '6' month
+  -- using scrobbled_at_year to get partitioning, then subfiltering to 6M
+  where date(s.scrobbled_at_year) = date_trunc('year', now() - interval '1' year)
+    and s.scrobbled_at > now() - interval '6' month
 ),
 
 scrobble_counts_by_hour as (
