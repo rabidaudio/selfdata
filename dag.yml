@@ -1,0 +1,27 @@
+# This is a config file that powers orchestrate/repository.py
+# Ideally most of this would be loaded dynamically, but some
+# of it can't so for simplicity it's declarative instead
+meltano_el:
+  taps:
+    tap-lichess:
+      namespace: tap_lichess
+      streams:
+        - users
+        - games
+    tap-lastfm:
+      namespace: tap_lastfm
+      streams:
+        - users
+        - scrobbles
+  target: target-athena
+dbt:
+  target_path: .meltano/transformers/dbt/target
+  project_path: transform
+  profile: athena
+evidence:
+  path: notebook
+  tables:
+    - lastfm_users
+    - listens_per_month
+    - chess_outcomes_by_month
+    - chess_openings

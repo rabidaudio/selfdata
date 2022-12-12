@@ -2,7 +2,7 @@ import datetime
 
 import pandas as pd
 
-from my_meltano_project.assets.athena import query_athena
+from my_meltano_project.services.athena import query_athena
 
 
 def test_query_athena():

@@ -1,50 +1,39 @@
-import json
 import os
 
-from dagster import load_assets_from_package_module, repository, with_resources
-from dagster_dbt import dbt_cli_resource, load_assets_from_dbt_manifest
+import yaml
+from dagster import load_assets_from_package_module, repository
 
 from my_meltano_project import assets
+from my_meltano_project.assets.dbt import dbt_assets
+from my_meltano_project.assets.evidence import evidence_asset
 from my_meltano_project.assets.meltano import meltano_el_assets, meltano_run_job
+from my_meltano_project.assets.sqlite import sqlite_assets
 
-DBT_PROJECT_PATH = f"{os.environ['MELTANO_PROJECT_ROOT']}/transform"
-DBT_TARGET_PATH = (
-    f"{os.environ['MELTANO_PROJECT_ROOT']}/.meltano/transformers/dbt/target"
-)
-
-
-def dbt_assets():
-    # TODO: run dbt compile first!
-    with open(
-        f"{DBT_TARGET_PATH}/manifest.json",
-        "r",
-    ) as f:
-        data = json.load(f)
-        return with_resources(
-            load_assets_from_dbt_manifest(data),
-            {
-                "dbt": dbt_cli_resource.configured(
-                    {
-                        "project_dir": DBT_PROJECT_PATH,
-                        "target_path": DBT_TARGET_PATH,
-                        "profiles_dir": f"{DBT_PROJECT_PATH}/profiles/athena",
-                    }
-                )
-            },
-        )
+# TODO: will be uncessary pending https://github.com/meltano/meltano/pull/6409
+WORKDIR = os.environ["MELTANO_PROJECT_ROOT"]
 
 
 @repository
 def my_meltano_project():
-    return [
-        load_assets_from_package_module(assets),
-        meltano_run_job,
-        *meltano_el_assets(
-            taps=[
-                "tap-lichess",
-                "tap-lastfm",
-            ],
-            target="target-athena",
-        ),
-        *dbt_assets(),
-    ]
+    with open(f"{WORKDIR}/dag.yml", "r") as f:
+        config = yaml.safe_load(f)
+        return [
+            # EL
+            meltano_run_job,
+            *meltano_el_assets(**config["meltano_el"]),
+            # DBT
+            *dbt_assets(
+                profile=config["dbt"]["profile"],
+                project_path=f"{WORKDIR}/{config['dbt']['project_path']}",
+                target_path=f"{WORKDIR}/{config['dbt']['target_path']}",
+            ),
+            # Evidence
+            *sqlite_assets(config["evidence"]["tables"]),
+            evidence_asset(
+                path=f"{WORKDIR}/notebook",
+                tables=config["evidence"]["tables"],
+                dest="/site/",
+            ),
+            # Anything else
+            load_assets_from_package_module(assets),
+        ]

@@ -1,19 +1,13 @@
-import os
 import shlex
 import subprocess
+from typing import List
 
 from dagster import Failure, asset, get_dagster_logger
 
+from my_meltano_project.services.s3 import upload_files
 
-@asset(
-    non_argument_deps={
-        "sqlite_listens_per_month",
-        "sqlite_lastfm_users",
-        "sqlite_chess_outcomes_by_month",
-        "sqlite_chess_openings",
-    }
-)
-def evidence_docs():
+
+def _evidence_build(path):
     logger = get_dagster_logger()
     try:
         sub_process = subprocess.Popen(
@@ -21,7 +15,7 @@ def evidence_docs():
             shell=True,
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT,
-            cwd=f"{os.environ['MELTANO_PROJECT_ROOT']}/notebook",
+            cwd=path,
             encoding="UTF-8",
         )
         for line in sub_process.stdout:
@@ -38,3 +32,14 @@ def evidence_docs():
         # pipeline run is terminated
         if sub_process:
             sub_process.terminate()
+
+
+def evidence_asset(path: str, tables: List[str], dest: str):
+    @asset(
+        non_argument_deps={f"sqlite_tmp_{table}" for table in tables}, name="evidence"
+    )
+    def evidence():
+        _evidence_build(path)
+        upload_files(f"{path}/build", root_path=dest)
+
+    return evidence

@@ -135,9 +135,9 @@ environments:
 - name: sandbox
   env:
     WAREHOUSE_BUCKET: audio-rabid-selfdata
-    WAREHOUSE_STAGING_DIR: s3://audio-rabid-selfdata/_sandbox/_staging
+    WAREHOUSE_STAGING_DIR: s3://audio-rabid-selfdata/_staging
     WAREHOUSE_REGION: us-east-1
 jobs:
 - name: daily_pipeline
   tasks:
-  - dbt-athena:compile dagster:materalize
+  - dagster:materalize
