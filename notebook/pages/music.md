@@ -4,21 +4,23 @@
 select username, url from lastfm_users
 ```
 
+<ul>
 {#each users as user}
-  <h1><a href={user.url}><Value data={user} column=username/></a></h1>
+  <li><a href={user.url}><Value data={user} column=username/></a></li>
 {/each}
+</ul>
 
-```listens_per_month
-select date_trunc('month', scrobbled_at) as month, username, count(1) as listens
-from scrobbles
-group by month, username
-order by month, username
+```listens_per_year
+select username, cast(strftime('%Y', month) as int) as year, sum(listens) as listens
+from listens_per_month
+group by username, year
+order by year, username
 ```
 
 <LineChart 
-    data={listens_per_month} 
-    x=month 
+    data={listens_per_year} 
+    x=year 
     y=listens 
-    series=username 
+    series=username
+    handleMissing=zero
 />
-<!-- https://github.com/rabidaudio/lfm-age-stats/blob/master/app/javascript/components/Show/index.js -->

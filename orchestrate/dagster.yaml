@@ -1,0 +1,10 @@
+run_launcher:
+  module: dagster.core.launcher
+  class: DefaultRunLauncher
+run_storage:
+  module: my_meltano_project.dagster_s3
+  class: S3SqliteRunStorage
+  config:
+    base_dir: history
+    remote_dir:
+      env: WAREHOUSE_BUCKET

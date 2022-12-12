@@ -21,3 +21,15 @@ Hosted using [Meltano Cloud](https://meltano.com/cloud/)!
 meltano invoke kms:encrypt
 git push origin main
 ```
+
+# TODO
+
+- Use evidence.dev for querying: [BLOCKED] see https://github.com/evidence-dev/evidence/pull/473 https://github.com/evidence-dev/evidence/issues/486
+- sqlfluff
+- integrate more sources
+- make dagster utility [BLOCKED] see https://github.com/meltano/meltano/pull/6409
+- switch to BATCH taps/targets on S3
+- convert meltano into a cli resource
+- musicbrainz dagster assets
+- port listening age queries to evidence: https://github.com/rabidaudio/lfm-age-stats/blob/master/app/javascript/components/Show/index.js
+- update tap-lastfm sdk version

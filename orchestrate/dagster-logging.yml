@@ -1,0 +1,15 @@
+version: 1
+
+formatters:
+  json:
+    (): meltano.core.logging.json_formatter
+
+handlers:
+  console:
+    class: logging.StreamHandler
+    formatter: json
+
+root:
+  level: INFO
+  propagate: yes
+  handlers: [console]

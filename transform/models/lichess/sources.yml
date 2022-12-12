@@ -1,0 +1,20 @@
+version: 2
+
+sources:
+  - name: tap_lichess
+    schema: tap_lichess
+    freshness: 
+      warn_after: {count: 1, period: day}
+      error_after: {count: 2, period: day}
+    loaded_at_field: _sdc_batched_at
+    tables:
+      - name: games
+        columns:
+          - name: id
+            tests: [unique, not_null]
+      - name: users
+        columns:
+          - name: id
+            tests: [not_null, unique]
+          - name: username
+            tests: [not_null, unique]

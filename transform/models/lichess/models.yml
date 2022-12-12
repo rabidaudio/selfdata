@@ -1,0 +1,27 @@
+version: 2
+
+models:
+  - name: chess_games
+    description: A chess game played online on Lichess.
+    columns:
+      - name: id
+        tests: [unique, not_null]
+      - name: username
+        tests: [not_null]
+      - name: outcome
+        tests:
+          - accepted_values:
+              values: [won, lost, drawn]
+  - name: chess_openings
+    description: Stats about openings used by players
+    columns:
+      - name: username
+        tests: [not_null]
+      - name: opening_name
+        tests: [not_null]
+      - name: side
+        tests:
+          - accepted_values:
+              values: [white, black]
+  - name: chess_outcomes_by_month
+    description: Outcome statistics per player aggregated monthly
