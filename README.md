@@ -33,5 +33,3 @@ git push origin main
 - musicbrainz dagster assets
 - port listening age queries to evidence: https://github.com/rabidaudio/lfm-age-stats/blob/master/app/javascript/components/Show/index.js
 - update tap-lastfm sdk version
-- set up webserver for evidence assets
-- save dagster runs and event logs in S3, allowing access remotely

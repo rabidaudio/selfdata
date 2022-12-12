@@ -124,6 +124,8 @@ plugins:
       test_lint:
         args: -e lint
         executable: tox
+      wipe_runs:
+        args: run wipe --force
     config:
       schedule_timezone: America/New_York
 
